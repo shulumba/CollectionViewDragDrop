@@ -66,11 +66,9 @@
             if (![self.swapSet containsObject:swapDescription]) {
                 [self.swapSet addObject:swapDescription];
                 self.isMoving = YES;
-                //NSLog(@"Is moving");
                 [self performBatchUpdates:^{
                     [self moveItemAtIndexPath:interactiveIndexPath toIndexPath:hoverIndexPath];
                     [self moveItemAtIndexPath:hoverIndexPath toIndexPath:interactiveIndexPath];
-                    //[self.delegate moveRowAtIndexPath:interactiveIndexPath toIndexPath:hoverIndexPath];
                 } completion:^(BOOL finished) {
                     [self.swapSet removeObject:swapDescription];
                     self.interactiveIndexPath = hoverIndexPath;
@@ -245,13 +243,15 @@
 
 - (BOOL)canMoveHorizontalItemAtFrame:(CGRect)previousCellFrame toItemAtFrame:(CGRect)interativeFrame {
     CGRect instersection = CGRectIntersection(previousCellFrame, interativeFrame);
-    BOOL canMove = instersection.size.width < 30 && instersection.size.height > (previousCellFrame.size.height - 10);
+    CGSize moveOffsetSize = CGSizeMake(30, 10);
+    BOOL canMove = instersection.size.width < moveOffsetSize.width && instersection.size.height > (previousCellFrame.size.height - moveOffsetSize.height);
     return canMove;
 }
 
 - (BOOL)canMoveVerticalItemAtFrame:(CGRect)previousCellFrame toItemAtFrame:(CGRect)interativeFrame {
     CGRect instersection = CGRectIntersection(previousCellFrame, interativeFrame);
-    BOOL canMove = (instersection.size.width > (previousCellFrame.size.width - 15))  && instersection.size.height < 30;
+    CGSize moveOffsetSize = CGSizeMake(15, 30);
+    BOOL canMove = (instersection.size.width > (previousCellFrame.size.width - moveOffsetSize.width))  && instersection.size.height < moveOffsetSize.height;
     return canMove;
 }
 
